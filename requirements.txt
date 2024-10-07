@@ -7,3 +7,4 @@ celery==5.3.6
 channels==4.0.0
 python-decouple==3.8
 gunicorn==21.2.0
+djangorestframework-simplejwt==5.3.1
