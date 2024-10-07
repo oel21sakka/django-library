@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+venv/
+.python-version
+Pipfile
+Pipfile.lock
+
+# Django
+db.sqlite3
+media/
+
+# Environment variables
+.env
+
+# IDEs
+.vscode/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# Redis
+*.rdb
+
+# Documentation
+/documentation

@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+    env_file:
+      - .env
+
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "0:5432"
+
+  redis:
+    image: redis:6
+    ports:
+      - "0:6379"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "0:5672"
+      - "0:15672"
+
+  celery:
+    build: .
+    command: celery -A django_library worker -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+    env_file:
+      - .env
+
+  celery-beat:
+    build: .
+    command: celery -A django_library beat -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+    env_file:
+      - .env
+
+volumes:
+  postgres_data:
