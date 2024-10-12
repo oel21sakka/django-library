@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'channels',
     'django_filters',
     'library',
+    'loans',
 ]
 
 MIDDLEWARE = [
