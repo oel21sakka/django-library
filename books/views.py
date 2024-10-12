@@ -1,8 +1,9 @@
-from django.db.models import Count, Prefetch
+from django.db.models import Count, Prefetch, Q
 from rest_framework import viewsets, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Author, Category, Book
 from .serializers import AuthorSerializer, AuthorDetailSerializer, BookDetailSerializer, CategorySerializer, BookSerializer
+from library.models import BookAvailability
 
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all()
@@ -15,18 +16,26 @@ class AuthorViewSet(viewsets.ModelViewSet):
         queryset = super().get_queryset()
 
         category_id = self.request.query_params.get('category')
+        library_id = self.request.query_params.get('library')
 
         if category_id:
             queryset = queryset.filter(books__category_id=category_id)
+
+        if library_id:
+            queryset = queryset.filter(books__availabilities__library_id=library_id)
 
         queryset = queryset.annotate(
             book_count=Count('books', distinct=True)
         )
 
         if self.request.query_params.get('loaded'):
-            book_filter = {'category_id': category_id} if category_id else {}
+            book_filter = Q()
+            if category_id:
+                book_filter &= Q(category_id=category_id)
+            if library_id:
+                book_filter &= Q(availabilities__library_id=library_id)
             queryset = queryset.prefetch_related(
-                Prefetch('books', queryset=Book.objects.filter(**book_filter), to_attr='filtered_books')
+                Prefetch('books', queryset=Book.objects.filter(book_filter), to_attr='filtered_books')
             )
 
         return queryset.distinct()
@@ -48,6 +57,15 @@ class BookViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     search_fields = ['title']
     filterset_fields = ['category', 'author']
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        library_id = self.request.query_params.get('library')
+        
+        if library_id:
+            queryset = queryset.filter(availabilities__library_id=library_id).distinct()
+        
+        return queryset
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
