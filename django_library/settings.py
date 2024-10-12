@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'books',
     'channels',
     'django_filters',
+    'library',
 ]
 
 MIDDLEWARE = [
