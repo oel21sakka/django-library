@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 from library.models import BookAvailability
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from .tasks import send_loan_confirmation_email
+from loans.notifications import notify_book_availability
 
 User = get_user_model()
 
@@ -43,6 +45,13 @@ class Loan(models.Model):
         book_availability.available -= 1
         book_availability.save()
 
+        # Send confirmation email
+        send_loan_confirmation_email.delay(
+            loan.user.email,
+            loan.book_availability.book.title,
+            loan.return_date.strftime('%Y-%m-%d')
+        )
+
         return loan
 
     @transaction.atomic
@@ -62,6 +71,10 @@ class Loan(models.Model):
         # Update book availability
         self.book_availability.available += 1
         self.book_availability.save()
+
+        if self.book_availability.available==1:
+            notify_book_availability(self.book_availability.book.title)
+        
 
     def __str__(self):
         return f"{self.user.username} - {self.book_availability.book.title}"

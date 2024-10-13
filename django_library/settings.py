@@ -166,6 +166,7 @@ CELERY_RESULT_BACKEND = config('REDIS_URL')
 
 # Channels settings
 ASGI_APPLICATION = 'django_library.asgi.application'
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -174,3 +175,7 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'noreply@yourlibrary.com'
