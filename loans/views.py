@@ -6,11 +6,13 @@ from .models import Loan
 from .serializers import LoanSerializer, LoanCreateSerializer
 from .filters import LoanFilter
 from django.core.exceptions import ValidationError
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 
 class LoanViewSet(viewsets.ModelViewSet):
     queryset = Loan.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_class = LoanFilter
+    throttle_classes = [UserRateThrottle, AnonRateThrottle]
 
     def get_serializer_class(self):
         if self.action == 'create':

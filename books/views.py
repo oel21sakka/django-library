@@ -3,7 +3,7 @@ from rest_framework import viewsets, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Author, Category, Book
 from .serializers import AuthorSerializer, AuthorDetailSerializer, BookDetailSerializer, CategorySerializer, BookSerializer
-from library.models import BookAvailability
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all()
@@ -11,6 +11,7 @@ class AuthorViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['name']
     search_fields = ['name', 'bio']  
+    throttle_classes = [UserRateThrottle, AnonRateThrottle]
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -50,6 +51,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name']
+    throttle_classes = [UserRateThrottle, AnonRateThrottle]
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
@@ -57,6 +59,7 @@ class BookViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     search_fields = ['title']
     filterset_fields = ['category', 'author']
+    throttle_classes = [UserRateThrottle, AnonRateThrottle]
 
     def get_queryset(self):
         queryset = super().get_queryset()

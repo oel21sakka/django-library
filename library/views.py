@@ -9,12 +9,14 @@ from .serializers import (
 )
 from django.db.models import F
 from django.db.models.functions import ACos, Cos, Radians, Sin
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 
 class LibraryViewSet(viewsets.ModelViewSet):
     queryset = Library.objects.all()
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['name', 'address']
     search_fields = ['name', 'address']
+    throttle_classes = [UserRateThrottle, AnonRateThrottle]
     
     def get_serializer_class(self):
         if self.action == 'retrieve':
@@ -52,6 +54,7 @@ class BookAvailabilityViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['library', 'book', 'quantity', 'available']
     search_fields = ['library__name', 'book__title']
+    throttle_classes = [UserRateThrottle, AnonRateThrottle]
     
     def get_serializer_class(self):
         if self.action == 'retrieve':
