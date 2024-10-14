@@ -95,7 +95,12 @@ class Loan(models.Model):
         self.book_availability.save()
 
         if self.book_availability.available == 1:
-            notify_book_availability(self.book_availability.book.title)
+            library_name = self.book_availability.library.name  # Assuming a related library model
+            notify_book_availability(
+                self.book_availability.book.id,
+                self.book_availability.book.title,
+                library_name
+            )
 
     def __str__(self):
         return f"{self.user.username} - {self.book_availability.book.title}"

@@ -13,6 +13,6 @@ urlpatterns = [
 
 
 websocket_urlpatterns = [
-    re_path(r'ws/book_availability/$', consumers.BookAvailabilityConsumer.as_asgi()),
+    re_path(r'ws/book_availability/(?P<book_id>\d+)/$', consumers.BookAvailabilityConsumer.as_asgi()),
 ]
 
