@@ -15,7 +15,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/authors/",
+							"raw": "{{base_url}}/authors/?library=1&loaded=true",
 							"host": [
 								"{{base_url}}"
 							],
@@ -31,13 +31,11 @@
 								},
 								{
 									"key": "library",
-									"value": "1",
-									"disabled": true
+									"value": "1"
 								},
 								{
 									"key": "loaded",
-									"value": "true",
-									"disabled": true
+									"value": "true"
 								}
 							]
 						}
@@ -51,7 +49,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Ahmed Mourad\",\n    \"bio\": \"Egyptian Writer\"\n}",
+							"raw": "{\n    \"name\": \"Naguib Mahfouz\",\n    \"bio\": \"Egyptian Writer awarded nobel prize\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -167,7 +165,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Fiction\"\n}",
+							"raw": "{\n    \"name\": \"Historical\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -264,7 +262,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/books/",
+							"raw": "{{base_url}}/books/?author=2",
 							"host": [
 								"{{base_url}}"
 							],
@@ -280,8 +278,7 @@
 								},
 								{
 									"key": "author",
-									"value": "1",
-									"disabled": true
+									"value": "2"
 								},
 								{
 									"key": "library",
@@ -300,7 +297,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Mousem Saed EL-Ghezlan\",\n    \"author\": 1,\n    \"category\": 1,\n    \"description\": \"Fictional book about the future of humanity\"\n}",
+							"raw": "{\n    \"title\": \"Midaq Alley\",\n    \"author\": 1,\n    \"category\": 3,\n    \"description\": \"book about arab culture\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -346,7 +343,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"Updated Book Title\",\n    \"author\": 1,\n    \"category\": 1,\n    \"description\": \"Updated book description\"\n}",
+							"raw": "{\n    \"title\": \"Midaq Alley\",\n    \"author\": 2,\n    \"category\": 1,\n    \"description\": \"book about arab culture\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -354,13 +351,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/books/1/",
+							"raw": "{{base_url}}/books/4/",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"books",
-								"1",
+								"4",
 								""
 							]
 						}
@@ -397,7 +394,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/libraries/?category=1&author=1&latitude=40.7128&longitude=-74.0060",
+							"raw": "{{base_url}}/libraries/",
 							"host": [
 								"{{base_url}}"
 							],
@@ -408,19 +405,23 @@
 							"query": [
 								{
 									"key": "category",
-									"value": "1"
+									"value": "1",
+									"disabled": true
 								},
 								{
 									"key": "author",
-									"value": "1"
+									"value": "1",
+									"disabled": true
 								},
 								{
 									"key": "latitude",
-									"value": "40.7128"
+									"value": "40.7128",
+									"disabled": true
 								},
 								{
 									"key": "longitude",
-									"value": "-74.0060"
+									"value": "-74.0060",
+									"disabled": true
 								}
 							]
 						}
@@ -434,7 +435,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Masr Library\",\n    \"address\": \"123 Library St\",\n    \"latitude\": 40.7128,\n    \"longitude\": -74.0060\n}",
+							"raw": "{\n    \"name\": \"Cairo Library\",\n    \"address\": \"456 Library St\",\n    \"latitude\": 40.7128,\n    \"longitude\": -74.0060\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -562,7 +563,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"library\": 1,\n    \"book\": 1,\n    \"quantity\": 5,\n    \"available\": 5,\n    \"price\": 9.99,\n    \"penalty_price\": 1.99\n}",
+							"raw": "{\n    \"library\": 1,\n    \"book\": 2,\n    \"quantity\": 5,\n    \"available\": 5,\n    \"price\": 9.99,\n    \"penalty_price\": 1.99\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -659,13 +660,28 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/loans/",
+							"raw": "{{base_url}}/loans/?status=Overdue&user=1",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"loans",
 								""
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "Overdue"
+								},
+								{
+									"key": "page",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "user",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -678,7 +694,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"user\": 1,\n    \"book_availability\": 1,\n    \"return_date\": \"2024-10-14T00:00:00Z\"\n}",
+							"raw": "{\n    \"user\": 2,\n    \"book_availability\": 2,\n    \"return_date\": \"2024-10-16\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -723,13 +739,13 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/loans/11/return_book/",
+							"raw": "{{base_url}}/loans/14/return_book/",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"loans",
-								"11",
+								"14",
 								"return_book",
 								""
 							]
@@ -781,7 +797,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI4NzY5MjkzLCJpYXQiOjE3Mjg3NjU2OTMsImp0aSI6IjY4NGQ3N2MxZGEwOTQ3ODQ4NGUxYWVmYzlkMTI5NmY4IiwidXNlcl9pZCI6NH0.dq0iCbY3TrPID1hVLx3KCIiu6F9iaZ4i78XN4GI8DMs",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI4ODY3MzczLCJpYXQiOjE3Mjg4NjM3NzMsImp0aSI6IjlmZjkzYzZjMzA2NzRjZDJiNmFmYmQwYTE0YjM1ZGM1IiwidXNlcl9pZCI6MX0.JmVGMrHt_ZRhZEJP5D2OU2JJPINzViavrzDon3zz7CY",
 									"type": "string"
 								}
 							]
@@ -818,7 +834,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"newuser\",\n    \"password\": \"securepassword123\"\n}",
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -841,6 +857,34 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Clear Cache",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI4ODc5MjAyLCJpYXQiOjE3Mjg4NzU2MDIsImp0aSI6Ijk0MDdiN2RmMGVlZTRiOWRiMmUxMjNjNDUwNzg2NGI2IiwidXNlcl9pZCI6MX0.2yO1gajLK0x6_ZNgZEbwPzC6YoleY60fpdFYjSb99QQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/clear-cache/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"clear-cache",
+						""
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
