@@ -1,13 +1,17 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import Loan
 from .serializers import LoanSerializer, LoanCreateSerializer
+from .filters import LoanFilter
 from django.core.exceptions import ValidationError
 
 class LoanViewSet(viewsets.ModelViewSet):
     queryset = Loan.objects.all()
-    
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = LoanFilter
+
     def get_serializer_class(self):
         if self.action == 'create':
             return LoanCreateSerializer
