@@ -9,6 +9,7 @@ Pipfile.lock
 db.sqlite3
 media/
 */migrations
+staticfiles/
 
 # Environment variables
 .env

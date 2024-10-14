@@ -8,6 +8,7 @@ services:
              daphne -b 0.0.0.0 -p 8000 django_library.asgi:application"
     volumes:
       - .:/code
+      - ./staticfiles:/code/staticfiles
     ports:
       - "8000:8000"
     depends_on:
