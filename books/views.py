@@ -1,3 +1,5 @@
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.db.models import Count, Prefetch, Q
 from rest_framework import viewsets, filters
 from django_filters.rest_framework import DjangoFilterBackend
@@ -12,6 +14,10 @@ class AuthorViewSet(viewsets.ModelViewSet):
     filterset_fields = ['name']
     search_fields = ['name', 'bio']  
     throttle_classes = [UserRateThrottle, AnonRateThrottle]
+
+    @method_decorator(cache_page(60 * 60 * 12))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -53,6 +59,10 @@ class CategoryViewSet(viewsets.ModelViewSet):
     search_fields = ['name']
     throttle_classes = [UserRateThrottle, AnonRateThrottle]
 
+    @method_decorator(cache_page(60 * 60 * 12))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
@@ -60,6 +70,10 @@ class BookViewSet(viewsets.ModelViewSet):
     search_fields = ['title']
     filterset_fields = ['category', 'author']
     throttle_classes = [UserRateThrottle, AnonRateThrottle]
+
+    @method_decorator(cache_page(60 * 60 * 12))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
     def get_queryset(self):
         queryset = super().get_queryset()

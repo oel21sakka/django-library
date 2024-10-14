@@ -1,3 +1,5 @@
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework import viewsets, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Library, BookAvailability
@@ -17,6 +19,10 @@ class LibraryViewSet(viewsets.ModelViewSet):
     filterset_fields = ['name', 'address']
     search_fields = ['name', 'address']
     throttle_classes = [UserRateThrottle, AnonRateThrottle]
+    
+    @method_decorator(cache_page(60 * 60 * 12))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
     
     def get_serializer_class(self):
         if self.action == 'retrieve':

@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import clear_cache
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +26,5 @@ urlpatterns = [
     path('', include('books.urls')),
     path('', include('library.urls')),
     path('', include('loans.urls')),
+    path('clear-cache/', clear_cache),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
