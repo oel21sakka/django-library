@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from library.models import BookAvailability
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from datetime import timedelta
 from .tasks import send_loan_confirmation_email
 from loans.notifications import notify_book_availability
 
@@ -18,11 +19,32 @@ class Loan(models.Model):
     penalty_price = models.DecimalField(max_digits=10, decimal_places=2)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
-    def clean(self):
+    def clean_user(self):
         if self.user.profile.book_count >= 3:
-            raise ValidationError("User has reached the maximum number of borrowed books.")
+            raise ValidationError({'user': "User has reached the maximum number of borrowed books."})
+        return self.user
+
+    def clean_book_availability(self):
         if self.book_availability.available <= 0:
-            raise ValidationError("This book is not available for borrowing.")
+            raise ValidationError({'book_availability': "This book is not available for borrowing."})
+        return self.book_availability
+
+    def clean_return_date(self):
+        if self.return_date < timezone.now():
+            raise ValidationError({'return_date': "The return date cannot be set in the past. Please choose a future date."})
+        
+        if not self.borrow_date:
+            self.borrow_date = timezone.now()
+            
+        max_return_date = self.borrow_date + timedelta(days=30)
+        if self.return_date > max_return_date:
+            raise ValidationError({'return_date': "The return date must be within one month of the borrow date."})
+        return self.return_date
+
+    def clean(self):
+        self.clean_user()
+        self.clean_book_availability()
+        self.clean_return_date()
 
     @classmethod
     @transaction.atomic
@@ -34,7 +56,7 @@ class Loan(models.Model):
             price=book_availability.price,
             penalty_price=book_availability.penalty_price
         )
-        loan.clean()
+        loan.full_clean()
         loan.save()
 
         # Update user's book count
@@ -72,9 +94,8 @@ class Loan(models.Model):
         self.book_availability.available += 1
         self.book_availability.save()
 
-        if self.book_availability.available==1:
+        if self.book_availability.available == 1:
             notify_book_availability(self.book_availability.book.title)
-        
 
     def __str__(self):
         return f"{self.user.username} - {self.book_availability.book.title}"
